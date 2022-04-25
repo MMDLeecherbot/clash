@@ -1,0 +1,62 @@
+mixed-port: 7890
+allow-lan: false
+mode: Rule
+log-level: silent
+external-controller: 127.0.0.1:9090
+dns:
+  enable: true
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  nameserver:
+    - 1.1.1.1
+    - 8.8.8.8
+  fallback:
+    - 1.1.1.1
+    - 8.8.8.8
+proxies:
+  - {name: "@MMDLeecher 🇩🇪", server: 20.47.112.21, port: 443, type: ss, cipher: chacha20-ietf-poly1305, password: rThokKnNJ0Wc}
+  - {name: "@MMDLeecher 🇳🇱", server: 20.157.22.29, port: 443, type: ss, cipher: chacha20-ietf-poly1305, password: Cn8XeNO0edLP}
+  - {name: "@MMDLeecher 🇫🇷", server: 20.47.80.99, port: 443, type: ss, cipher: chacha20-ietf-poly1305, password: HPFNxLPwPWYC}
+  - {name: "@MMDLeecher 🇸🇪", server: 51.12.50.42, port: 443, type: ss, cipher: chacha20-ietf-poly1305, password: oky4g7PupsB6}
+  - {name: "@MMDLeecher 🇨🇭", server: 20.47.71.79, port: 443, type: ss, cipher: chacha20-ietf-poly1305, password: G3UvjbZEwhwm}
+  
+proxy-groups:
+  - name: 🔥 Auto
+    type: url-test
+    proxies:
+      - "@MMDLeecher 🇩🇪"
+      - "@MMDLeecher 🇳🇱"
+      - "@MMDLeecher 🇫🇷"
+      - "@MMDLeecher 🇸🇪"
+      - "@MMDLeecher 🇨🇭"
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+  - name: 🔰 Select
+    type: select
+    proxies:
+      - 🔥 Auto
+      - "@MMDLeecher 🇩🇪"
+      - "@MMDLeecher 🇳🇱"
+      - "@MMDLeecher 🇫🇷"
+      - "@MMDLeecher 🇸🇪"
+      - "@MMDLeecher 🇨🇭"
+      - ✅ Direct
+
+      
+      
+  - name: ✅ Direct
+    type: select
+    proxies:
+      - DIRECT
+  - name: 🚫 Intercept
+    type: select
+    proxies:
+      - REJECT
+      - DIRECT
+rules:
+  - IP-CIDR,91.121.235.96/29,🔥 Auto
+  - GEOIP,91.121.235.96,🔥 Auto
+  - DOMAIN-SUFFIX,ad.com,🚫 Intercept
+  #- GEOIP,IR,✅ Direct
+  - MATCH,🔰 Select
